@@ -9,7 +9,7 @@ from zope.security.interfaces import Unauthorized
 from zope.security.checker import CheckerPublic
 
 from zope.annotation.interfaces import IAnnotations
-from zope.app.container.contained import Contained
+from zope.container.contained import Contained
 
 from zope.lifecycleevent import ObjectModifiedEvent
 
