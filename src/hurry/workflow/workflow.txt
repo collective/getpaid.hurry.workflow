@@ -27,7 +27,7 @@ As you can see, such a content object must provide IAnnotatable, as
 this is used to store the workflow state. The system uses the
 IWorkflowState adapter to get and set an object's workflow state::
 
-    >>> from getpaid.hurry.workflow import interfaces
+    >>> from hurry.workflow import interfaces
     >>> document = Document('Foo')
     >>> state = interfaces.IWorkflowState(document)
     >>> print state.getState()
@@ -63,7 +63,7 @@ and an action that takes place when the transition is taken::
 
 Now let's construct a transition::
 
-    >>> from getpaid.hurry.workflow import workflow 
+    >>> from hurry.workflow import workflow 
     >>> transition = workflow.Transition( 
     ...     transition_id='a_to_b', 
     ...     title='A to B', 

@@ -1,8 +1,7 @@
-import random
-import sys
+import random, sys
 
 from persistent import Persistent
-from zope import interface
+from zope import interface 
 from zope.event import notify
 from zope.security.management import getInteraction
 from zope.security.interfaces import NoInteraction
@@ -17,28 +16,24 @@ from zope.lifecycleevent import ObjectModifiedEvent
 from zope.component.interfaces import ObjectEvent
 
 from zope import component
-from getpaid.hurry.workflow import interfaces
-from getpaid.hurry.workflow.interfaces import MANUAL, AUTOMATIC, SYSTEM
-from getpaid.hurry.workflow.interfaces import\
+from hurry.workflow import interfaces
+from hurry.workflow.interfaces import MANUAL, AUTOMATIC, SYSTEM
+from hurry.workflow.interfaces import\
      IWorkflow, IWorkflowState, IWorkflowInfo, IWorkflowVersions, \
      IAdaptedWorkflow
-from getpaid.hurry.workflow.interfaces import\
+from hurry.workflow.interfaces import\
      InvalidTransitionError, ConditionFailedError
-
 
 def NullCondition(wf, context):
     return True
 
-
 def NullAction(wf, context):
     pass
-
 
 # XXX this is needed to make the tests pass in the absence of
 # interactions..
 def nullCheckPermission(permission, principal_id):
     return True
-
 
 class Transition(object):
 
@@ -59,14 +54,13 @@ class Transition(object):
         self.permission = permission
         self.order = order
         self.user_data = user_data
-
+        
     def __cmp__(self, other):
         return cmp(self.order, other.order)
-
-
+    
 class Workflow(Persistent, Contained):
     interface.implements(IWorkflow)
-
+    
     def __init__(self, transitions):
         self.refresh(transitions)
 
@@ -81,13 +75,13 @@ class Workflow(Persistent, Contained):
         for transition in transitions:
             self._register(transition)
         self._p_changed = True
-
+        
     def getTransitions(self, source):
         try:
             return self._sources[source].values()
         except KeyError:
             return []
-
+        
     def getTransition(self, source, transition_id):
         transition = self._id_transitions[transition_id]
         if transition.source != source:
@@ -116,20 +110,18 @@ class Workflow(Persistent, Contained):
                     visited.add(dest)
                 out.append('t%d [shape=none, label="%s"]' % (num_transitions,
                                                              transition.title))
-                out.append('"%s" -> t%d -> "%s"' % (
-                    state, num_transitions, dest))
+                out.append('"%s" -> t%d -> "%s"' % (state, num_transitions, dest))
         out.append("}")
 
         return "\n".join(out)
-
-
+        
 class WorkflowState(object):
-
+    
     interface.implements(IWorkflowState)
 
     workflow_state_key = "hurry.workflow.state"
-    workflow_id_key = "hurry.workflow.id"
-
+    workflow_id_key  = "hurry.workflow.id"
+    
     def __init__(self, context):
         # XXX okay, I'm tired of it not being able to set annotations, so
         # we'll do this. Ugh.
@@ -139,28 +131,27 @@ class WorkflowState(object):
     def initialize(self):
         wf_versions = component.getUtility(IWorkflowVersions)
         self.setId(wf_versions.createVersionId())
-
+        
     def setState(self, state):
         if state != self.getState():
-            IAnnotations(self.context)[self.workflow_state_key] = state
-
+            IAnnotations(self.context)[ self.workflow_state_key ] = state
+            
     def setId(self, id):
         # XXX catalog should be informed (or should it?)
-        IAnnotations(self.context)[self.workflow_id_key] = id
-
+        IAnnotations(self.context)[ self.workflow_id_key ] = id
+        
     def getState(self):
         try:
-            return IAnnotations(self.context)[self.workflow_state_key]
+            return IAnnotations(self.context)[ self.workflow_state_key ]
         except KeyError:
             return None
 
     def getId(self):
         try:
-            return IAnnotations(self.context)[self.workflow_id_key]
+            return IAnnotations(self.context)[ self.workflow_id_key ]
         except KeyError:
             return None
-
-
+            
 class WorkflowInfo(object):
 
     interface.implements(IWorkflowInfo)
@@ -168,10 +159,10 @@ class WorkflowInfo(object):
     def __init__(self, context):
         self.context = context
 
-    def info(self, context=None):
+    def info( self, context = None ):
         if context is None:
-            return IWorkflowInfo(self.context)
-        return IWorkflowInfo(context)
+            return IWorkflowInfo( self.context )
+        return IWorkflowInfo( context )
 
     def state( self, context = None ):
         if context is None:
