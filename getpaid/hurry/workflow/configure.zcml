@@ -4,7 +4,7 @@
 
   <localUtility class=".workflow.Workflow">
     <factory
-        id="hurry.workflow.Workflow"
+        id="getpaid.hurry.workflow.Workflow"
         />
     <require
         interface=".interfaces.IWorkflow"
