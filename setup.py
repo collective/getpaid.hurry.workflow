@@ -20,4 +20,8 @@ setup(
     keywords="zope zope3",
     classifiers=['Framework :: Zope3'],
     install_requires=['setuptools'],
+    entry_points="""
+    [z3c.autoinclude.plugin]
+    target = plone
+    """,
 )
